@@ -1,34 +1,21 @@
-
 const CACHE_NAME = 'soccer-team-hub-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  // Local application files - assuming the environment handles transpilation of .tsx/.ts to JS modules
-  '/index.tsx', // The entry point script
-  '/App.tsx',
-  '/types.ts',
-  '/constants.ts',
-  '/services/geminiService.ts',
-  '/components/AuthScreen.tsx',
-  '/components/Header.tsx',
-  '/components/Dashboard.tsx',
-  '/components/Profile.tsx',
-  '/components/Chat.tsx',
-  '/components/EventModal.tsx',
-  '/components/Calendar.tsx',
-  '/components/icons/CalendarIcon.tsx',
-  '/components/icons/ChatIcon.tsx',
-  '/components/icons/LogoutIcon.tsx',
-  '/components/icons/ProfileIcon.tsx',
-  '/components/icons/TeamIcon.tsx',
-  '/components/icons/LanguageIcon.tsx',
-  '/components/icons/CameraIcon.tsx',
-  '/components/icons/EditIcon.tsx',
-  '/translations.ts',
-  '/contexts/LanguageContext.tsx',
-  '/vite.svg', // App icon
-  '/metadata.json', // The PWA manifest itself
-  // External CDN assets
+
+// Core application assets - these paths are relative to the service worker's scope.
+// The main JS bundle filename changes with each build (due to hashing).
+// You will need to UPDATE 'assets/index-Bt1nS0fa.js' to the ACTUAL path
+// and filename of your main JavaScript bundle after each 'npm run build'.
+// Look in your 'dist' folder for a file like 'assets/index-XXXXXXXX.js'.
+const CORE_APP_ASSETS_RELATIVE = [
+  'index.html',
+  'metadata.json',
+  'vite.svg',
+  // IMPORTANT: REPLACE THIS PLACEHOLDER with the actual hashed filename from your 'dist/assets/' folder!
+  // Example: 'assets/index-XXXXXXXX.js' where XXXXXXXX is the hash.
+  'assets/index-Bt1nS0fa.js', 
+];
+
+// External CDN assets (absolute URLs, do not need base prefixing)
+const CDN_ASSETS = [
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Cairo:wght@400;500;600;700;900&display=swap',
   // Pre-cache fonts explicitly if known to be used (woff2 is common)
@@ -40,17 +27,22 @@ const urlsToCache = [
   'https://aistudiocdn.com/@google/genai@^1.25.0' // Base URL for @google/genai as per importmap
 ];
 
-// Open a cache and populate it with pre-defined assets during installation
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-      .catch((error) => {
-        console.error('Failed to pre-cache assets:', error);
-      })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const baseUrl = self.registration.scope; // Get the base scope (e.g., /soccer-team-hub/)
+      
+      // Construct full URLs for core app assets based on the service worker's scope
+      const fullCoreAppAssetUrls = CORE_APP_ASSETS_RELATIVE.map(asset => new URL(asset, baseUrl).href);
+
+      const urlsToCache = [...fullCoreAppAssetUrls, ...CDN_ASSETS, baseUrl]; // Also cache the base URL itself ('/')
+      console.log('Pre-caching assets:', urlsToCache); // For debugging
+      await cache.addAll(urlsToCache);
+      console.log('Opened cache and added assets');
+    })().catch((error) => {
+      console.error('Failed to pre-cache assets during install:', error);
+    })
   );
 });
 
@@ -83,7 +75,7 @@ self.addEventListener('fetch', (event) => {
           .catch((error) => {
              console.error('Fetch failed for network request:', event.request.url, error);
              // Optionally, return an offline page or a specific cached response for network failures
-             // For example: return caches.match('/offline.html');
+             // For example: return caches.match(new URL('offline.html', self.registration.scope).href);
              throw error; // Re-throw to propagate the error if needed
           });
       })

@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -21,7 +22,10 @@ root.render(
 // PWA: Register service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
+    // Use import.meta.env.BASE_URL to dynamically get the base path from Vite config
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}service-worker.js`, {
+      scope: import.meta.env.BASE_URL
+    })
       .then(registration => {
         console.log('ServiceWorker registration successful with scope: ', registration.scope);
       })
