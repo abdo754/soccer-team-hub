@@ -3,7 +3,7 @@
   "description": "A comprehensive application for soccer teams to manage schedules, track player availability, and communicate effectively. Coaches can set up games and practices on a shared calendar, while players can RSVP and view their profiles. An integrated chat feature, powered by Gemini, allows for seamless team communication.",
   "requestFramePermissions": [],
   "display": "standalone",
-  "start_url": "/",
+  "start_url": "/soccer-team-hub/",
   "theme_color": "#111827",
   "background_color": "#111827",
   "icons": [

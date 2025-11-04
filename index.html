@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="%VITE_BASE_URL%vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Soccer Team Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,7 +19,7 @@
       }
     </style>
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/metadata.json">
+    <link rel="manifest" href="%VITE_BASE_URL%metadata.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#111827"> <!-- Matches background_color in manifest -->
@@ -39,6 +39,8 @@
 </head>
 <body class="bg-gray-900 text-white">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <!-- Vite automatically injects the correct hashed JS bundle here during build -->
+    <!-- The %VITE_BASE_URL% placeholder will be replaced by your base path defined in vite.config.ts -->
+    <script type="module" src="%VITE_BASE_URL%index.tsx"></script>
 </body>
 </html>
