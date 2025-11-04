@@ -11,7 +11,7 @@ const CORE_APP_ASSETS_RELATIVE = [
   'vite.svg',
   // IMPORTANT: REPLACE THIS PLACEHOLDER with the actual hashed filename from your 'dist/assets/' folder!
   // Example: 'assets/index-XXXXXXXX.js' where XXXXXXXX is the hash.
-  'assets/index-Bt1nS0fa.js', 
+  'assets/index-DC7kFGmM.js', 
 ];
 
 // External CDN assets (absolute URLs, do not need base prefixing)

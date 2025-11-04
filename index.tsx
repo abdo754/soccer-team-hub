@@ -1,3 +1,15 @@
+// Add a global declaration for ImportMetaEnv to ensure types are available if the reference doesn't work for some reason
+declare global {
+  interface ImportMetaEnv {
+    readonly BASE_URL: string
+    // add other environment variables you use here
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv
+  }
+}
+
 /// <reference types="vite/client" />
 
 import React from 'react';
